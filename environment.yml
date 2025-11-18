@@ -1,0 +1,8 @@
+name: example-project
+channels:
+    - conda-forge
+dependencies: 
+  - cmake 
+  - make 
+  - c-compiler
+  - sdl2
