@@ -6,3 +6,4 @@ dependencies:
   - make 
   - c-compiler
   - sdl2
+  - pkg-config

@@ -1,17 +1,13 @@
 cmake_minimum_required(VERSION 3.21)
-project(example-project LANGUAGES C)
+project(example-project VERSION 1.0 LANGUAGES C)
+set(CMAKE_C_STANDARD 23)
 
-include_directories(include)
 add_subdirectory(src)
+add_subdirectory(tests)
 
-include(FetchContent)
-FetchContent_Declare(
-    googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG        v1.15.2
-)
-FetchContent_MakeAvailable(googletest)
+include_directories(${PROJECT_SOURCE_DIR}/third_party)
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
-enable_testing(test_library test_library.cpp)
-target_link_libraries(test_libary library GTest::gtest_main)
-add_test(test_libary test_library)
+enable_testing()
+target_link_libraries(test_pendulum PRIVATE library)
+add_test(test_pendulum test_pendulum)
