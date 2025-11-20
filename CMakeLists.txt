@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(example-project LANGUAGES C)
+project(example-project LANGUAGES C CXX)
 
 include_directories(include)
 add_subdirectory(src)
@@ -12,6 +12,5 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-enable_testing(test_library test_library.cpp)
-target_link_libraries(test_libary library GTest::gtest_main)
-add_test(test_libary test_library)
+enable_testing()
+add_subdirectory(tests)

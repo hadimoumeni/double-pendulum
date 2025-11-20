@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include "utest.h"
 #include "library.h"
 
 TEST(DirectionToVectorTest, BasicAssertions) {
