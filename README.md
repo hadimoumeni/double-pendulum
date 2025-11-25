@@ -69,11 +69,8 @@ This update repeats every frame.
 
 ---
 
-## 🧩 Module Responsibilities
 
-### ✔️ My Contribution (Arithmetic Engine)
-
-Raji implemented:
+### Arithmetic Engine
 
 * The double pendulum equations
 * The Euler integration algorithm
