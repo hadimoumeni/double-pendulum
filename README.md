@@ -1,11 +1,6 @@
 # c-group-project
 
 ## Authors: Ryann Mack, Ronan, Hadi, Raji
-Got you — the issue is that the triple-backtick code fence made the whole README appear *inside* a code block, so GitHub/Overleaf won't render it.
-
-Here is the **same README, in pure Markdown**, with **NO backticks**, fully pastable into README.md.
-
----
 
 # Double Pendulum Simulation — Arithmetic Module
 
