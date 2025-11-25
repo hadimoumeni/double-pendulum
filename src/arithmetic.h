@@ -16,7 +16,7 @@ void compute(
   double *new_theta2,
   double *new_omega1,
   double *new_omega2
-){
+)
   {
     double delta = theta1 - theta2;
     double den = 2*m1 + m2 - m2 * cos(2*delta);
@@ -41,5 +41,4 @@ void compute(
 
     *new_theta1 = theta1 + (*new_omega1) * dt;
     *new_theta2 = theta2 + (*new_omega2) * dt;
-}
 }
