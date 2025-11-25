@@ -11,14 +11,10 @@ The system consists of two pendulums connected in series, producing **chaotic no
 
 Our group divided the work into modules:
 
-* Arithmetic / Physics Engine (my part)
+* Arithmetic / Physics Engine
 * Rendering
 * User input
 * System integration
-
-This README explains the **math model** and **numerical method** used in the arithmetic engine.
-
----
 
 ## 🧠 Mathematical Model
 
