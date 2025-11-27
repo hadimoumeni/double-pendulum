@@ -1,7 +1,21 @@
-find_package(SDL2 REQUIRED)
+# src/CMakeLists.txt
 
-add_executable(main make.c)
-target_link_libraries(main SDL2::SDL2) #linking the library with the correct executable
+# Single executable built from your three source files
+add_executable(main
+    main.c
+    sdl_visuals.c
+    renderer.c
+)
 
-add_library(library library.c)
-add_library(arithmetic arithmetic.h)
+# Your own headers
+target_include_directories(main PRIVATE
+    ${PROJECT_SOURCE_DIR}/include
+)
+
+# Add the system include directory so SDL2/SDL.h is visible
+target_include_directories(main PRIVATE
+    /usr/include
+)
+
+# Link against system SDL2 library
+target_link_libraries(main PRIVATE SDL2)
