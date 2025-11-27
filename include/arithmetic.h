@@ -35,7 +35,7 @@ void compute(
         )
     ) / (l2 * den);
 
-    // Euler integration
+    // Euler Integration
     *new_omega1 = omega1 + theta1_dd * dt;
     *new_omega2 = omega2 + theta2_dd * dt;
 

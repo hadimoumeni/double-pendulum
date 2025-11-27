@@ -6,7 +6,7 @@
 #include "../include/sdl_visuals.h"
 #include "../include/pendulum.h"
 
-// --- Global SDL Pointers ---
+//  Global SDL Pointers 
 static SDL_Window *gWindow = NULL;
 static SDL_Renderer *gRenderer = NULL;
 static const double PIX_PER_M = PIXELS_PER_METER; // Shorter alias for scale

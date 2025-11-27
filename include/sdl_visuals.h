@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "../include/pendulum.h"
 
-// --- Constants for Visuals ---
+// Constants for Visuals 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 #define PIXELS_PER_METER 150.0 // Scaling factor

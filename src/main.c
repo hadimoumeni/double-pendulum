@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
     PendulumParams params;
     PendulumState state;
 
-    // m1=1.0 kg, m2=1.0 kg, l1=1.5 m, l2=1.5 m, g=9.81 m/s^2
+    // m1 = 1.0 kg, m2=1.0 kg, l1=1.5 m, l2=1.5 m, g=9.81 m/s^2
     // Initial angles: 90 degrees (M_PI / 2)
     init_pendulum(&params, &state, 
                   1.0, 1.0, 1.5, 1.5, 9.81, 

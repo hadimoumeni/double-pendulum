@@ -1,7 +1,7 @@
 #include "../include/pendulum.h"
 #include "../include/arithmetic.h"
 
-// Initialize pendulum parameters and state
+// Initialize pendulum parameters and states
 void init_pendulum(PendulumParams *params, PendulumState *state,
                    double m1, double m2, double l1, double l2, double g,
                    double initial_theta1, double initial_theta2) {
