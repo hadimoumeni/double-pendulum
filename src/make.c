@@ -47,35 +47,21 @@ void update_pendulum(Pendulum *pendulum, double delta_time)
     // Pendulum equation: angular_acceleration = -(gravity/length) * sin(angle) - damping * angular_velocity
     double angular_acceleration = -(pendulum->gravity / pendulum->length) * sin(pendulum->angle) 
                                    - pendulum->damping * pendulum->angular_velocity;
-    
-    // Update angular velocity
     pendulum->angular_velocity += angular_acceleration * delta_time;
-    
-    // Update angle
     pendulum->angle += pendulum->angular_velocity * delta_time;
 }
 
-// Draw the pendulum
 void draw_pendulum(SDL_Renderer *renderer, Pendulum *pendulum)
 {
-    // Calculate bob position
     int bob_x = pendulum->pivot_x + (int)(pendulum->length * sin(pendulum->angle));
     int bob_y = pendulum->pivot_y + (int)(pendulum->length * cos(pendulum->angle));
-    
-    // Draw the string/rod (line from pivot to bob)
-    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255); // Light gray
+    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255); 
     SDL_RenderDrawLine(renderer, pendulum->pivot_x, pendulum->pivot_y, bob_x, bob_y);
-    
-    // Draw the pivot point (small circle)
-    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255); // Dark gray
+    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255); 
     draw_filled_circle(renderer, pendulum->pivot_x, pendulum->pivot_y, 5);
-    
-    // Draw the bob (weight)
-    SDL_SetRenderDrawColor(renderer, 255, 100, 100, 255); // Red
+    SDL_SetRenderDrawColor(renderer, 255, 100, 100, 255); 
     draw_filled_circle(renderer, bob_x, bob_y, pendulum->bob_radius);
-    
-    // Draw outline of bob
-    SDL_SetRenderDrawColor(renderer, 200, 50, 50, 255); // Darker red
+    SDL_SetRenderDrawColor(renderer, 200, 50, 50, 255); 
     draw_circle(renderer, bob_x, bob_y, pendulum->bob_radius);
 }
 
@@ -87,8 +73,7 @@ int main(int argc, char *argv[])
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         800, 600, SDL_WINDOW_SHOWN);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
-    
-    // Initialize pendulum
+
     Pendulum pendulum = {
         .angle = M_PI / 4.0,        // Start at 45 degrees
         .angular_velocity = 0.0,     // Start with no velocity
