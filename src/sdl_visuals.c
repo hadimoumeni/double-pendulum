@@ -11,7 +11,7 @@ static SDL_Window *gWindow = NULL;
 static SDL_Renderer *gRenderer = NULL;
 static const double PIX_PER_M = PIXELS_PER_METER; // Shorter alias for scale
 
-// --- Helper Functions ---
+// Helper Functions
 
 // Draws a filled circle at screen coordinates (cx, cy)
 static void draw_filled_circle(SDL_Renderer *rend, int cx, int cy, int radius) {
