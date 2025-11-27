@@ -1,21 +1,11 @@
 # src/CMakeLists.txt
 
-# Single executable built from your three source files
-add_executable(main
-    main.c
-    sdl_visuals.c
-    renderer.c
-)
+# Gather all source files in this directory (main.c, pendulum.c, visualizer.c, arithmetic.c)
+file(GLOB SOURCE_FILES "*.c")
 
-# Your own headers
-target_include_directories(main PRIVATE
-    ${PROJECT_SOURCE_DIR}/include
-)
+# Define the executable
+add_executable(double_pendulum_sim ${SOURCE_FILES})
 
-# Add the system include directory so SDL2/SDL.h is visible
-target_include_directories(main PRIVATE
-    /usr/include
-)
-
-# Link against system SDL2 library
-target_link_libraries(main PRIVATE SDL2)
+# --- Link Libraries ---
+# Link the executable with the SDL2 libraries found in the parent scope
+target_link_libraries(double_pendulum_sim PUBLIC ${SDL2_LIBRARIES} m)

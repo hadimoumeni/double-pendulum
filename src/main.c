@@ -1,32 +1,21 @@
-// main.c
+#include <stdio.h>
 #include <math.h>
 
-#include "pendulum.h"
-#include "sdl_visuals.h"
-#include "arithmetic.h"
+#include "../include/pendulum.h"
+#include "../include/sdl_visuals.h"
 
-int main(void)
-{
-    // Pendulum physical parameters
+int main(int argc, char *argv[]) {
+    
     PendulumParams params;
-    params.m1 = 1.0;
-    params.m2 = 1.0;
-    params.l1 = 1.0;          // meters
-    params.l2 = 1.0;
-    params.g  = 9.81;
-
-    // How those lengths appear on screen
-    params.l1_pixels = 200.0;
-    params.l2_pixels = 200.0;
-
-    // Initial state
     PendulumState state;
-    state.theta1 = M_PI / 2.0;  // 90° from vertical
-    state.theta2 = M_PI / 2.0;
-    state.omega1 = 0.0;
-    state.omega2 = 0.0;
 
-    // Run the SDL window + simulation loop
+    // m1=1.0 kg, m2=1.0 kg, l1=1.5 m, l2=1.5 m, g=9.81 m/s^2
+    // Initial angles: 90 degrees (M_PI / 2)
+    init_pendulum(&params, &state, 
+                  1.0, 1.0, 1.5, 1.5, 9.81, 
+                  M_PI / 2.0, M_PI / 2.0);
+
+    // Run the main SDL simulation loop
     run_simulation(&params, &state);
 
     return 0;
