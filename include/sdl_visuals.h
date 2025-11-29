@@ -6,13 +6,14 @@
 #include "../include/pendulum.h"
 
 // Constants for Visuals 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
-#define PIXELS_PER_METER 150.0 // Scaling factor
+#define SCREEN_WIDTH 1000 
+#define SCREEN_HEIGHT 750
+#define PIXELS_PER_METER 150.0 // Scaling factor (150 pixels per meter)
+#define GRID_SPACING 1.0       // Grid lines every 1.0 meter (150 pixels)
 
 // --- Main Simulation Function ---
 
-// Sets up SDL, runs the main loop (input, update, render), and cleans up.
-void run_simulation(PendulumParams *params, PendulumState *state);
+// Runs the simulation loop for a single pendulum.
+void run_simulation(Pendulum *p);
 
-#endif // VISUALIZER_H
+#endif // SDL_VISUALS_H
