@@ -1,4 +1,3 @@
-# src/CMakeLists.txt
 
 # Explicitly list source files for better control (Good code hygiene over GLOB)
 set(SOURCE_FILES
@@ -8,13 +7,18 @@ set(SOURCE_FILES
     arithmetic.c
 )
 
-# Define the executable
-add_executable(double_pendulum_sim ${SOURCE_FILES})
+target_include_directories(main PRIVATE
+    ${PROJECT_SOURCE_DIR}/include
+)
 
-# Link Libraries 
-# Link the executable with SDL2 and the math library 'm'
-target_link_libraries(double_pendulum_sim 
-    PRIVATE 
-        ${SDL2_LIBRARIES} 
-        m
+target_include_directories(main PRIVATE
+    /usr/include
+)
+
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
+target_link_libraries(main
+    PRIVATE
+        ${SDL2_LIBRARIES}
+        arithmetic
 )
