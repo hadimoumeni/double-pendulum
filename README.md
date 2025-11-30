@@ -78,5 +78,3 @@ This update repeats every frame.
 * All trigonometric math (sin, cos, etc.)
 
 The renderer uses these updated angles to draw the pendulum.
-
-

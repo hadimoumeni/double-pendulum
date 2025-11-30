@@ -1,6 +1,7 @@
 #ifndef ARITHMETIC_H
 #define ARITHMETIC_H
 
+// Computes the next state of the double pendulum using RK4 integration.
 void compute(
     double theta1,
     double theta2,

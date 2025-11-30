@@ -2,10 +2,18 @@
 #ifndef SDL_VISUALS_H
 #define SDL_VISUALS_H
 
-#include "pendulum.h"
+#include <stdbool.h>
+#include "../include/pendulum.h"
 
-// Run the SDL window + simulation loop.
-// This will update `state` over time until the user quits.
-void run_simulation(const PendulumParams *params, PendulumState *state);
+// Constants for Visuals 
+#define SCREEN_WIDTH 1000 
+#define SCREEN_HEIGHT 750
+#define PIXELS_PER_METER 150.0 // Scaling factor (150 pixels per meter)
+#define GRID_SPACING 1.0       // Grid lines every 1.0 meter (150 pixels)
 
-#endif
+// --- Main Simulation Function ---
+
+// Runs the simulation loop for a single pendulum.
+void run_simulation(Pendulum *p);
+
+#endif // SDL_VISUALS_H

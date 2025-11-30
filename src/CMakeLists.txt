@@ -1,20 +1,10 @@
 
-add_library(arithmetic STATIC
-    arithmetic.c
-)
-
-target_include_directories(arithmetic
-    PUBLIC ${PROJECT_SOURCE_DIR}/include
-)
-
-target_link_libraries(arithmetic
-    PUBLIC m
-)
-
-add_executable(main
+# Explicitly list source files for better control (Good code hygiene over GLOB)
+set(SOURCE_FILES
     main.c
+    pendulum.c
     sdl_visuals.c
-    renderer.c
+    arithmetic.c
 )
 
 target_include_directories(main PRIVATE

@@ -1,5 +1,5 @@
 #include <math.h>
-#include "arithmetic.h"
+#include "../include/arithmetic.h"
 
 
 static void accelerations(
@@ -11,7 +11,9 @@ static void accelerations(
     double *theta1_dd, double *theta2_dd // angular accelerations
 ) {
     double delta = theta1 - theta2;
-    double den = 2*m1 + m2 - m2 * cos(2 * delta);
+    // NOTE: This term is simplified. The original denominator should be a function of theta1, theta2, m1, m2.
+    // The provided equation is standard for the double pendulum.
+    double den = 2*m1 + m2 - m2 * cos(2 * delta); 
 
     *theta1_dd =
         (-g * (2*m1 + m2) * sin(theta1)
