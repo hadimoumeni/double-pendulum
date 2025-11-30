@@ -1,10 +1,29 @@
-# add_executable(test_pendulum test_pendulum.c)
-# target_link_libraries(test_pendulum PRIVATE library)
-# target_include_directories(test_library PRIVATE ${PROJECT_SOURCE_DIR}/third_party)
+cmake_minimum_required(VERSION 3.14)
 
-# add_test(NAME test_pendulum COMMAND test_pendulum)
+# 1. Fetch Unity Testing Framework
+include(FetchContent)
+FetchContent_Declare(
+  unity
+  GIT_REPOSITORY https://github.com/ThrowTheSwitch/Unity.git
+  GIT_TAG        v2.5.2
+)
+FetchContent_MakeAvailable(unity)
 
-add_executable(arithmetics_test arithmetics_test.c)
-target_link_libraries(arithmetics_test PRIVATE arithmetic m)
+# 2. Define the Test Executable
+# Note: We do NOT include main.c or sdl_visuals.c here
+add_executable(run_tests
+    test_suite.c
+    ../src/arithmetic.c
+    ../src/pendulum.c
+)
 
-add_test(NAME arithmetics_test COMMAND arithmetics_test)
+# 3. Link Libraries
+target_link_libraries(run_tests PRIVATE unity m)
+target_include_directories(run_tests PRIVATE 
+    ../include 
+    ${unity_SOURCE_DIR}/src
+)
+
+# 4. Register with CTest
+include(GoogleTest)
+add_test(NAME AllTests COMMAND run_tests)

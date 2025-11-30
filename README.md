@@ -78,3 +78,21 @@ This update repeats every frame.
 * All trigonometric math (sin, cos, etc.)
 
 The renderer uses these updated angles to draw the pendulum.
+
+## 🧪 Testing and Validation (QA)
+
+This project includes an automated testing suite using the **Unity** framework to validate the physics engine.
+
+### How to Run Tests
+To execute the test suite, run the following commands from the project root:
+
+```bash
+mkdir -p build && cd build
+cmake ..
+make
+./tests/run_tests
+
+Validation Strategy
+Integration Stability: The tests ensure the RK4 solver produces valid floating-point numbers (checking for NaN/Infinity) and correctly updates the system state during single steps.
+Physics Validation: We validate the Law of Conservation of Energy. Since the double pendulum is a conservative system (no friction), the Total Energy (Hamiltonian) must remain constant.
+Results: Our automated tests simulate 1000 time steps and assert that the total energy (Kinetic + Potential) remains constant within a 5% margin of error. This confirms that the chaotic motion observed is physically accurate and not a result of numerical instability.
