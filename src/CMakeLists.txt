@@ -1,5 +1,3 @@
-
-# Explicitly list source files for better control (Good code hygiene over GLOB)
 set(SOURCE_FILES
     main.c
     pendulum.c
