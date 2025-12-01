@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "arithmetic.h"
+#include "pendulum.h"
 
 #define ASSERT_TRUE(expr, msg) \
     if (!(expr)) { \

@@ -11,8 +11,6 @@ static void accelerations(
     double *theta1_dd, double *theta2_dd // angular accelerations
 ) {
     double delta = theta1 - theta2;
-    // NOTE: This term is simplified. The original denominator should be a function of theta1, theta2, m1, m2.
-    // The provided equation is standard for the double pendulum.
     double den = 2*m1 + m2 - m2 * cos(2 * delta); 
 
     *theta1_dd =
@@ -40,7 +38,7 @@ void compute(
     double *new_theta1, double *new_theta2,
     double *new_omega1, double *new_omega2
 ) {
-    // --- k1 ---
+    // k1
     double k1_omega1, k1_omega2, k1_theta1, k1_theta2;
     accelerations(theta1, theta2, omega1, omega2,
                   m1, m2, L1, L2, g,
@@ -48,7 +46,7 @@ void compute(
     k1_theta1 = omega1;
     k1_theta2 = omega2;
 
-    // --- k2 ---
+    // k2 
     double th1_2 = theta1 + 0.5 * dt * k1_theta1;
     double th2_2 = theta2 + 0.5 * dt * k1_theta2;
     double om1_2 = omega1 + 0.5 * dt * k1_omega1;
@@ -61,7 +59,7 @@ void compute(
     k2_theta1 = om1_2;
     k2_theta2 = om2_2;
 
-    // --- k3 ---
+    // k3 
     double th1_3 = theta1 + 0.5 * dt * k2_theta1;
     double th2_3 = theta2 + 0.5 * dt * k2_theta2;
     double om1_3 = omega1 + 0.5 * dt * k2_omega1;
@@ -74,7 +72,7 @@ void compute(
     k3_theta1 = om1_3;
     k3_theta2 = om2_3;
 
-    // --- k4 ---
+    // k4 
     double th1_4 = theta1 + dt * k3_theta1;
     double th2_4 = theta2 + dt * k3_theta2;
     double om1_4 = omega1 + dt * k3_omega1;

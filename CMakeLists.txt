@@ -15,5 +15,5 @@ add_subdirectory(src)
 
 # Enable testing (Good for Project Hygiene)
 enable_testing()
-# add_subdirectory(tests) 
+add_subdirectory(tests) 
 # Note: You'll need to define tests here later to meet the 'tests' rubric.
