@@ -6,18 +6,16 @@
 #include "../include/sdl_visuals.h"
 #include "../include/pendulum.h"
 
-// --- Global SDL State and Constants ---
 static SDL_Window *gWindow = NULL;
 static SDL_Renderer *gRenderer = NULL;
 static const double PIX_PER_M = PIXELS_PER_METER; 
 static bool simulation_running = false; 
-static bool is_dragging = false; // NEW: Flag for drag-and-drop
+static bool is_dragging = false; 
 
 const int BOB_RADIUS = 10;
 const int PIVOT_X = SCREEN_WIDTH / 2;
 const int PIVOT_Y = SCREEN_HEIGHT / 3;
 
-// --- Helper Functions ---
 
 // Draws a simple grid on the background for context.
 static void draw_grid() {
@@ -84,13 +82,13 @@ static void close_sdl() {
 
 static void render_pendulum(const Pendulum *p) {
     
-    // --- 1. Forward Kinematics ---
+    // 1. Forward Kinematics
     int x1 = PIVOT_X + (int)(p->l1 * sin(p->theta1) * PIX_PER_M);
     int y1 = PIVOT_Y + (int)(p->l1 * cos(p->theta1) * PIX_PER_M);
     int x2 = x1 + (int)(p->l2 * sin(p->theta2) * PIX_PER_M);
     int y2 = y1 + (int)(p->l2 * cos(p->theta2) * PIX_PER_M);
 
-    // --- 2. Draw Trail ---
+    // 2. Draw Trail
     int start = p->trail_full ? 0 : p->trail_index;
     int end = p->trail_full ? TRAIL_LENGTH : p->trail_index;
     int length = p->trail_full ? TRAIL_LENGTH : p->trail_index;
@@ -111,7 +109,7 @@ static void render_pendulum(const Pendulum *p) {
                            p->trail_x[next_idx], p->trail_y[next_idx]);
     }
     
-    // --- 3. Draw Rods and Bobs ---
+    // 3. Draw Rods and Bobs
 
     // Draw Rods (Gray)
     SDL_SetRenderDrawColor(gRenderer, 150, 150, 150, 255); 
@@ -130,7 +128,7 @@ static void render_pendulum(const Pendulum *p) {
     // Draw Pivot (White dot)
     draw_filled_circle(gRenderer, PIVOT_X, PIVOT_Y, 5, 255, 255, 255);
 
-    // --- 4. Draw Velocity Indicators (Simple UI) ---
+    // 4. Draw Velocity Indicators (Simple UI) 
     // If paused, draw simple velocity lines (simulated UI element)
     if (!simulation_running) {
         // Red line for Omega 1 (proportional to velocity)
@@ -189,7 +187,7 @@ static bool handle_input(Pendulum *p) {
             }
         }
         
-        // --- Mouse Input: Drag-and-Drop Positioning ---
+        // Mouse Input: Drag-and-Drop Positioning
         
         // Mouse Down: Start dragging only when simulation is paused
         if (event.type == SDL_MOUSEBUTTONDOWN && !simulation_running) {
@@ -248,18 +246,18 @@ void run_simulation(Pendulum *p) {
     double accumulator = 0.0; 
 
     while (running) {
-        // --- 1. Frame Timing ---
+        // 1. Frame Timing 
         Uint32 current_time = SDL_GetTicks();
         double frame_time = (current_time - last_time) / 1000.0; 
         last_time = current_time;
         if (frame_time > 0.25) frame_time = 0.25; 
         accumulator += frame_time;
 
-        // --- 2. Input ---
+        // 2. Input 
         running = handle_input(p); 
         if (!running) break;
 
-        // --- 3. Physics Update (Fixed Timestep Loop) ---
+        // 3. Physics Update (Fixed Timestep Loop)
         if (simulation_running) {
             while (accumulator >= PHYS_STEP) {
                 update_pendulum(p, PHYS_STEP, PIX_PER_M, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -267,11 +265,11 @@ void run_simulation(Pendulum *p) {
             }
         }
 
-        // --- 4. Render ---
+        // 4. Render 
         SDL_SetRenderDrawColor(gRenderer, 30, 30, 40, 255); 
         SDL_RenderClear(gRenderer);
         
-        draw_grid(); // NEW: Draw grid
+        draw_grid(); 
         render_pendulum(p);
         
         SDL_RenderPresent(gRenderer);
