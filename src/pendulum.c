@@ -11,7 +11,7 @@ void init_pendulum(Pendulum *p,
                    double initial_theta1, double initial_theta2,
                    unsigned char r_val, unsigned char g_val_color, unsigned char b_val) {
     
-    // --- Set parameters (Caching local variables for assignment) ---
+    // Set parameters (Caching local variables for assignment)
     double m1 = m1_val;
     double m2 = m2_val;
     double l1 = l1_val;
@@ -23,7 +23,7 @@ void init_pendulum(Pendulum *p,
     p->l2 = l2;
     p->g = g;
 
-    // --- Set initial state (Caching local variables for assignment) ---
+    // Set initial state (Caching local variables for assignment)
     double theta1 = initial_theta1;
     double theta2 = initial_theta2;
     double omega1 = 0.0;
@@ -49,7 +49,7 @@ void init_pendulum(Pendulum *p,
 static void get_screen_coords(const Pendulum *p, double pixels_per_meter, int screen_width, int screen_height,
                               int pivot_x, int pivot_y, int *x2_screen, int *y2_screen) {
     
-    // --- Cache all state/parameters to local variables ---
+    // Cache all state/parameters to local variables
     double l1 = p->l1;
     double l2 = p->l2;
     double theta1 = p->theta1;
@@ -68,7 +68,7 @@ static void get_screen_coords(const Pendulum *p, double pixels_per_meter, int sc
 // Update the pendulum's state and its visual trail history. 
 void update_pendulum(Pendulum *p, double dt, double pixels_per_meter, int screen_width, int screen_height) {
     
-    // --- Cache all state/parameters to local variables ---
+    //  Cache all state/parameters to local variables
     double theta1 = p->theta1;
     double theta2 = p->theta2;
     double omega1 = p->omega1;
@@ -128,7 +128,7 @@ void update_pendulum(Pendulum *p, double dt, double pixels_per_meter, int screen
 void set_pendulum_position_ik(Pendulum *p, double target_x, double target_y, 
                               double pivot_x_screen, double pivot_y_screen, double pixels_per_meter) {
     
-    // --- Cache all state/parameters to local variables ---
+    // Cache all state/parameters to local variables 
     double L1 = p->l1;
     double L2 = p->l2;
 
@@ -159,7 +159,7 @@ void set_pendulum_position_ik(Pendulum *p, double target_x, double target_y,
     double dy_m1_m2 = target_Y - y1_calc;
     double new_th2 = atan2(dx_m1_m2, dy_m1_m2);
 
-    // --- 6. Set Final State (Caching local variables for write-back) ---
+    // 6. Set Final State (Caching local variables for write-back) 
     double theta1 = new_th1;
     double theta2 = new_th2;
     
