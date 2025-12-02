@@ -2,9 +2,16 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdint.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <string.h>
 
 #include "../include/sdl_visuals.h"
 #include "../include/pendulum.h"
+#include "../include/sha256.h"
 
 static SDL_Window *gWindow = NULL;
 static SDL_Renderer *gRenderer = NULL;
@@ -12,10 +19,29 @@ static const double PIX_PER_M = PIXELS_PER_METER;
 static bool simulation_running = false; 
 static bool is_dragging = false; 
 
+static int udp_sock = -1;
+static struct sockaddr_in udp_dest;
+static int udp_initialized = 0;
+
 const int BOB_RADIUS = 10;
 const int PIVOT_X = SCREEN_WIDTH / 2;
 const int PIVOT_Y = SCREEN_HEIGHT / 3;
 
+void setup_udp_sender(const char* dest_ip, int dest_port) {
+    udp_sock = socket(AF_INET, SOCK_DGRAM, 0);
+    memset(&udp_dest, 0, sizeof(udp_dest));
+    udp_dest.sin_family = AF_INET;
+    udp_dest.sin_port = htons(dest_port);
+    inet_pton(AF_INET, dest_ip, &udp_dest.sin_addr);
+    udp_initialized = 1;
+}
+
+void send_random_number_udp(uint64_t randnum) {
+    if (!udp_initialized) return;
+    char msg[64];
+    snprintf(msg, sizeof(msg), "%llu", (unsigned long long)randnum);
+    sendto(udp_sock, msg, strlen(msg), 0, (struct sockaddr*)&udp_dest, sizeof(udp_dest));
+}
 
 // Draws a simple grid on the background for context.
 static void draw_grid() {
@@ -244,6 +270,8 @@ void run_simulation(Pendulum *p) {
     bool running = true;
     Uint32 last_time = SDL_GetTicks();
     double accumulator = 0.0; 
+    double sim_time = 0.0;
+    double next_log_time = 2.0;
 
     while (running) {
         // 1. Frame Timing 
@@ -262,6 +290,41 @@ void run_simulation(Pendulum *p) {
             while (accumulator >= PHYS_STEP) {
                 update_pendulum(p, PHYS_STEP, PIX_PER_M, SCREEN_WIDTH, SCREEN_HEIGHT);
                 accumulator -= PHYS_STEP;
+                sim_time += PHYS_STEP;
+                if (sim_time >= next_log_time) {
+                    // Calculate positions
+                    double x1 = p->l1 * sin(p->theta1);
+                    double y1 = -p->l1 * cos(p->theta1);
+                    double x2 = x1 + p->l2 * sin(p->theta2);
+                    double y2 = y1 - p->l2 * cos(p->theta2);
+                    printf("[t=%.2fs] Mass1: (%.3f, %.3f)  Mass2: (%.3f, %.3f)", sim_time, x1, y1, x2, y2);
+
+                    // --- SHA-256 hash of the product of positions ---
+                    double product = x1 * y1 * x2 * y2;
+                    char prod_str[64];
+                    snprintf(prod_str, sizeof(prod_str), "%.16f", product);
+                    uint8_t hash[SHA256_BLOCK_SIZE];
+                    SHA256_CTX ctx;
+                    sha256_init(&ctx);
+                    sha256_update(&ctx, (uint8_t*)prod_str, strlen(prod_str));
+                    sha256_final(&ctx, hash);
+                    printf(" | SHA256(product): ");
+                    for (int i = 0; i < SHA256_BLOCK_SIZE; i++) printf("%02x", hash[i]);
+                    // For a random number, just use the first 8 bytes as a uint64_t
+                    uint64_t randnum = 0;
+                    for (int i = 0; i < 8; i++) randnum = (randnum << 8) | hash[i];
+                    printf(" | Random: %llu\n", (unsigned long long)randnum);
+                    // --- End SHA-256 ---
+
+                    if (!udp_initialized) {
+                        // Set your friend's IP and port here
+                        setup_udp_sender("FRIEND_IP_HERE", 12345); // <-- REPLACE FRIEND_IP_HERE
+                    }
+
+                    send_random_number_udp(randnum);
+
+                    next_log_time += 2.0;
+                }
             }
         }
 

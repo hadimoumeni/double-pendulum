@@ -4,6 +4,7 @@ set(SOURCE_FILES
     pendulum.c
     sdl_visuals.c
     arithmetic.c
+    sha256.c
 )
 
 # Create the executable target called "main"

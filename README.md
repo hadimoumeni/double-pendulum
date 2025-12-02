@@ -53,7 +53,7 @@ These equations form the core physics engine.
 
 ## 🧮 Numerical Method — Euler Integration
 
-We approximate the motion using the **Euler method**.
+
 
 Given a time step dt:
 
