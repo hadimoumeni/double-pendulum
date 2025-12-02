@@ -43,21 +43,20 @@ void send_random_number_udp(uint64_t randnum) {
     sendto(udp_sock, msg, strlen(msg), 0, (struct sockaddr*)&udp_dest, sizeof(udp_dest));
 }
 
-// Draws a simple grid on the background for context.
 static void draw_grid() {
-    SDL_SetRenderDrawColor(gRenderer, 50, 50, 60, 255); // Dark blue-gray for grid
+    SDL_SetRenderDrawColor(gRenderer, 50, 50, 60, 255); // Dark blue-gray
 
     // Horizontal lines
     int h_offset_start = PIVOT_Y % (int)(GRID_SPACING * PIX_PER_M);
     for (int y = h_offset_start; y < SCREEN_HEIGHT; y += (int)(GRID_SPACING * PIX_PER_M)) {
-        if (y < PIVOT_Y - 1 || y > PIVOT_Y + 1) { // Skip drawing over the pivot for clarity
+        if (y < PIVOT_Y - 1 || y > PIVOT_Y + 1) {
             SDL_RenderDrawLine(gRenderer, 0, y, SCREEN_WIDTH, y);
         }
     }
     // Vertical lines
     int v_offset_start = PIVOT_X % (int)(GRID_SPACING * PIX_PER_M);
     for (int x = v_offset_start; x < SCREEN_WIDTH; x += (int)(GRID_SPACING * PIX_PER_M)) {
-        if (x < PIVOT_X - 1 || x > PIVOT_X + 1) { // Skip drawing over the pivot for clarity
+        if (x < PIVOT_X - 1 || x > PIVOT_X + 1) { 
             SDL_RenderDrawLine(gRenderer, x, 0, x, SCREEN_HEIGHT);
         }
     }
@@ -82,7 +81,6 @@ static bool init_sdl() {
         return false;
     }
 
-    // Set window title to show controls
     gWindow = SDL_CreateWindow("Pendulum: Drag Bob 2. W/S/A/D to adjust velocity. SPACE to Play/Pause.",
                               SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                               SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
@@ -142,7 +140,7 @@ static void render_pendulum(const Pendulum *p) {
     SDL_RenderDrawLine(gRenderer, PIVOT_X, PIVOT_Y, x1, y1); 
     SDL_RenderDrawLine(gRenderer, x1, y1, x2, y2);           
 
-    // Draw Bob 1 (Lighter version of main color)
+    // Draw Bob 1
     draw_filled_circle(gRenderer, x1, y1, BOB_RADIUS, 
                        (unsigned char)fmin(255, p->color_r * 1.5), 
                        (unsigned char)fmin(255, p->color_g * 1.5), 
@@ -154,15 +152,14 @@ static void render_pendulum(const Pendulum *p) {
     // Draw Pivot (White dot)
     draw_filled_circle(gRenderer, PIVOT_X, PIVOT_Y, 5, 255, 255, 255);
 
-    // 4. Draw Velocity Indicators (Simple UI) 
-    // If paused, draw simple velocity lines (simulated UI element)
+    // 4. Draw Velocity Indicators
     if (!simulation_running) {
-        // Red line for Omega 1 (proportional to velocity)
+        // Red line for Omega 1
         SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 255);
         SDL_RenderDrawLine(gRenderer, x1, y1, 
                            x1 + (int)(p->omega1 * 5), y1); 
                            
-        // Green line for Omega 2 (proportional to velocity)
+        // Green line for Omega 2
         SDL_SetRenderDrawColor(gRenderer, 0, 255, 0, 255);
         SDL_RenderDrawLine(gRenderer, x2, y2, 
                            x2 + (int)(p->omega2 * 5), y2); 
@@ -172,14 +169,14 @@ static void render_pendulum(const Pendulum *p) {
 
 static bool handle_input(Pendulum *p) {
     SDL_Event event;
-    const double VEL_STEP = 0.5; // Amount to change angular velocity by
+    const double VEL_STEP = 0.5; // change in angular velocity
 
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
             return false;
         }
 
-        // --- Keyboard Input ---
+        // Keyboard Input 
         if (event.type == SDL_KEYDOWN) {
             // R: Reset Position and Velocity
             if (event.key.keysym.sym == SDLK_r) {
@@ -214,9 +211,7 @@ static bool handle_input(Pendulum *p) {
         }
         
         // Mouse Input: Drag-and-Drop Positioning
-        
-        // Mouse Down: Start dragging only when simulation is paused
-        if (event.type == SDL_MOUSEBUTTONDOWN && !simulation_running) {
+            if (event.type == SDL_MOUSEBUTTONDOWN && !simulation_running) {
             is_dragging = true;
             p->omega1 = 0.0;
             p->omega2 = 0.0;
@@ -227,7 +222,7 @@ static bool handle_input(Pendulum *p) {
         
         // Mouse Motion: Dragging
         else if (event.type == SDL_MOUSEMOTION && is_dragging) {
-            // Update position continuously while dragging
+            // Update position
             set_pendulum_position_ik(p, 
                                      (double)event.motion.x, (double)event.motion.y, 
                                      (double)PIVOT_X, (double)PIVOT_Y, PIX_PER_M);
@@ -285,7 +280,7 @@ void run_simulation(Pendulum *p) {
         running = handle_input(p); 
         if (!running) break;
 
-        // 3. Physics Update (Fixed Timestep Loop)
+        // 3. Physics Update
         if (simulation_running) {
             while (accumulator >= PHYS_STEP) {
                 update_pendulum(p, PHYS_STEP, PIX_PER_M, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -299,7 +294,7 @@ void run_simulation(Pendulum *p) {
                     double y2 = y1 - p->l2 * cos(p->theta2);
                     printf("[t=%.2fs] Mass1: (%.3f, %.3f)  Mass2: (%.3f, %.3f)", sim_time, x1, y1, x2, y2);
 
-                    // --- SHA-256 hash of the product of positions ---
+                    // SHA-256 hash of the product of positions
                     double product = x1 * y1 * x2 * y2;
                     char prod_str[64];
                     snprintf(prod_str, sizeof(prod_str), "%.16f", product);
@@ -314,7 +309,7 @@ void run_simulation(Pendulum *p) {
                     uint64_t randnum = 0;
                     for (int i = 0; i < 8; i++) randnum = (randnum << 8) | hash[i];
                     printf(" | Random: %llu\n", (unsigned long long)randnum);
-                    // --- End SHA-256 ---
+                    // End SHA-256 
 
                     if (!udp_initialized) {
                         // Set your friend's IP and port here
