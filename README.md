@@ -4,7 +4,7 @@ A real-time interactive simulation of a double pendulum system implemented in C.
 
 ## Authors
 
-Ryann Mack, Ronan, Hadi, Raji
+Ryann, Ronan, Hadi, Raji
 
 ## Project Overview
 
