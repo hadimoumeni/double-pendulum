@@ -1,14 +1,14 @@
 #include <math.h>
-#include "../include/arithmetic.h"
+#include "arithmetic.h"
 
 
 static void accelerations(
-    double theta1, double theta2, // angles
-    double omega1, double omega2,  // angular velocities
-    double m1, double m2, // masses
-    double L1, double L2, // rod lengths
-    double g, // gravitational acceleration
-    double *theta1_dd, double *theta2_dd // angular accelerations
+    double theta1, double theta2,
+    double omega1, double omega2,  
+    double m1, double m2, 
+    double L1, double L2, 
+    double g, 
+    double *theta1_dd, double *theta2_dd 
 ) {
     double delta = theta1 - theta2;
     double den = 2*m1 + m2 - m2 * cos(2 * delta); 
@@ -86,7 +86,7 @@ void compute(
     k4_theta2 = om2_4;
 
 
-//  Final RK4 weighted average update
+//  Final RK4 
 
     *new_theta1 = theta1 + (dt / 6.0) *
         (k1_theta1 + 2*k2_theta1 + 2*k3_theta1 + k4_theta1);

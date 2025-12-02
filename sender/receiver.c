@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-#define PORT 12345 // Use the same port as the sender
+#define PORT 12345
 
 int main() {
     int sock = socket(AF_INET, SOCK_DGRAM, 0);
