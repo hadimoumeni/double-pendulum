@@ -8,7 +8,6 @@
 void setUp(void) { }
 void tearDown(void) { }
 
-/* TEST 1: Basic Math Check */
 void test_Single_Step_Integration(void) {
     double theta1 = M_PI / 4;
     double theta2 = M_PI / 2;
@@ -27,8 +26,7 @@ void test_Single_Step_Integration(void) {
     TEST_ASSERT_TRUE_MESSAGE(theta1 != nt1, "theta1 did not update");
 }
 
-/* Helper for Energy Calculation */
-double get_total_energy(double m1, double m2, double l1, double l2, 
+static double get_total_energy(double m1, double m2, double l1, double l2, 
                         double t1, double t2, double w1, double w2, double g) {
     double K1 = 0.5 * m1 * l1*l1 * w1*w1;
     double term2 = 0.5 * m2 * (l1*l1*w1*w1 + l2*l2*w2*w2 + 2*l1*l2*w1*w2*cos(t1-t2));
@@ -36,9 +34,7 @@ double get_total_energy(double m1, double m2, double l1, double l2,
     return K1 + term2 + V;
 }
 
-/* TEST 2: Physics Validation */
 void test_Energy_Conservation(void) {
-    // Start at 45 degrees (M_PI/4) to ensure Energy is non-zero
     double t1 = M_PI/4;
     double t2 = M_PI/4;
     double w1 = 0, w2 = 0;
@@ -55,11 +51,9 @@ void test_Energy_Conservation(void) {
 
     double end_E = get_total_energy(m1, m2, l1, l2, t1, t2, w1, w2, g);
 
-    // Manual Logic Check
     double diff = fabs(start_E - end_E);
-    double allowed_error = fabs(start_E) * 0.05; // 5% error margin
+    double allowed_error = fabs(start_E) * 0.05;
 
-    // Create a helpful error message if it fails
     char msg[100];
     snprintf(msg, sizeof(msg), "Energy lost! Start: %.4f, End: %.4f", start_E, end_E);
 
