@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 project(DoublePendulumSim C)
+add_definitions(-DUNITY_INCLUDE_DOUBLE)
 set(CMAKE_C_STANDARD 23)
 
 # Find SDL2 (Required for all C projects using it)
