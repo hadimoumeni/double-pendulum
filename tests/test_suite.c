@@ -6,7 +6,7 @@
 void setUp(void) { }
 void tearDown(void) { }
 
-// Assert Raji's calculations are correct
+// Assert Raji's math
 
 static double get_total_energy(double m1, double m2, double l1, double l2, 
                                double t1, double t2, double w1, double w2, double g) {
