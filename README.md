@@ -1,6 +1,6 @@
 # Double Pendulum Simulation
 
-Interactive double pendulum simulation written in C. Shows chaotic motion with real-time visualization.
+An interactive double pendulum simulation implemented in C with real-time visualization. This project demonstrates chaotic dynamics through a physics-accurate simulation with visual feedback and user interaction.
 
 ## Authors
 
@@ -8,21 +8,21 @@ Ryann Mack, Ronan, Hadi, Raji
 
 ## Overview
 
-This is a double pendulum simulator. Two pendulums connected together - the first one hangs from a fixed point, and the second one hangs from the end of the first. Even though it looks simple, tiny changes in starting position lead to completely different motion patterns.
+This simulation models a double pendulum system, where two pendulums are connected in series. The first pendulum is attached to a fixed pivot point, and the second pendulum hangs from the end of the first. Despite the simple construction, the system exhibits chaotic behavior where small changes in initial conditions lead to dramatically different trajectories over time.
 
-We split the work into different parts:
+The project is organized into several modules:
 
-- Physics calculations and integration (arithmetic.c)
-- Pendulum state and coordinate stuff (pendulum.c)  
-- Drawing and user input (sdl_visuals.c)
-- UDP networking for sending data (sender/receiver.c)
-- Tests to make sure the physics works (tests/)
+- **Physics Engine** (`arithmetic.c`): Implements the mathematical model and numerical integration
+- **State Management** (`pendulum.c`): Handles pendulum state, initialization, and coordinate transformations
+- **Visualization** (`sdl_visuals.c`): SDL2 rendering, user input handling, and the main simulation loop
+- **Networking** (`sender/receiver.c`): UDP communication for data sharing between instances
+- **Testing** (`tests/`): Automated test suite for validating physics accuracy
 
-## How It Works
+## Mathematical Model
 
-The double pendulum follows these differential equations. We have four things that change over time: two angles (theta1, theta2) and two angular velocities (omega1, omega2). The physical setup has masses m1 and m2, rod lengths L1 and L2, and gravity g.
+The double pendulum is governed by a system of coupled nonlinear differential equations. The system has four state variables: two angles (theta1, theta2) and two angular velocities (omega1, omega2). Physical parameters include the masses of both bobs (m1, m2), the lengths of both rods (L1, L2), and gravitational acceleration (g).
 
-The acceleration equations come from Lagrangian mechanics:
+The angular accelerations are derived from Lagrangian mechanics:
 
 ```
 delta = theta1 - theta2
@@ -39,51 +39,70 @@ theta2_double_dot = [2*sin(delta) * (omega1^2*L1*(m1 + m2)
                      / (L2 * denominator)
 ```
 
-We use RK4 (Runge-Kutta 4th order) to solve these equations. It's more accurate than Euler and runs fast enough for real-time. The `compute()` function in arithmetic.c does one time step - it takes the current angles and velocities and gives you the new ones after dt seconds. We usually use dt = 0.01.
+These equations capture the interactions between the two pendulums, including gravitational forces, centripetal effects, and the coupling between the masses.
 
-## Files
+## Numerical Integration
 
-Main source files:
-- `src/arithmetic.c` - physics equations and RK4 integration
-- `src/pendulum.c` - pendulum state, initialization, screen coordinates
-- `src/sdl_visuals.c` - SDL rendering, input handling, main loop
-- `src/main.c` - starts everything up
-- `src/sha256.c` - hashing for network stuff
+The simulation uses the fourth-order Runge-Kutta (RK4) method to integrate the equations of motion. RK4 provides a good balance between accuracy and computational efficiency for real-time simulation. The method evaluates the system at four intermediate points within each time step and combines them using a weighted average.
 
-Headers:
-- `include/arithmetic.h` - compute() function declaration
-- `include/pendulum.h` - Pendulum struct and functions
-- `include/sdl_visuals.h` - screen size constants and run_simulation()
-- `include/sha256.h` - hashing functions
+The integration is performed in the `compute()` function in `arithmetic.c`, which takes the current state and physical parameters and returns the new state after one time step. The time step size (dt) is typically set to 0.01 seconds, which provides smooth animation while maintaining numerical stability.
 
-Other:
-- `sender/receiver.c` - UDP receiver program
-- `tests/test_suite.c` - Unity tests
+## Project Structure
 
-## Controls
+### Source Files
 
-**Mouse**: Click and drag the second bob to move it. Uses inverse kinematics to figure out the angles. Pauses while dragging.
+- `src/arithmetic.c`: Physics engine with acceleration calculations and RK4 integration
+- `src/pendulum.c`: Pendulum state management, initialization, and coordinate transformations
+- `src/sdl_visuals.c`: SDL2 rendering, user input handling, and main simulation loop
+- `src/main.c`: Entry point that initializes a pendulum and starts the simulation
+- `src/sha256.c`: SHA-256 hashing implementation for network data integrity
 
-**Keyboard**:
-- W/S - change first pendulum velocity
-- A/D - change second pendulum velocity  
-- SPACE or P - play/pause
-- R - reset to starting position
-- ESC - quit
+### Header Files
 
-When paused, you'll see red and green lines showing the velocity directions.
+- `include/arithmetic.h`: Interface for the physics computation function
+- `include/pendulum.h`: Definition of the Pendulum structure and state management functions
+- `include/sdl_visuals.h`: Constants and function declarations for the visualization system
+- `include/sha256.h`: SHA-256 hashing interface
 
-## Visual Stuff
+### Additional Components
 
-The pendulum draws with two rods and two bobs (circles). The second bob leaves a trail showing where it's been - we keep the last 500 positions in a circular buffer. There's also a grid in the background to help see the scale (1 meter spacing).
+- `sender/receiver.c`: Standalone UDP receiver program for receiving data from the simulation
+- `tests/test_suite.c`: Automated test suite using the Unity testing framework
 
-## Networking
+## Features
 
-There's UDP code for sending random numbers to other programs. Uses SHA-256 for checksums. The receiver program is in sender/receiver.c.
+### Interactive Controls
 
-## Building
+The simulation provides several ways to interact with the pendulum:
 
-Uses CMake. Build it like this:
+- **Mouse Drag**: Click and drag the second bob to position the pendulum. The system uses inverse kinematics to calculate the required angles. The simulation pauses automatically during dragging.
+
+- **Keyboard Controls**:
+  - W/S: Increase/decrease the angular velocity of the first pendulum
+  - A/D: Decrease/increase the angular velocity of the second pendulum
+  - SPACE or P: Toggle play/pause
+  - R: Reset the pendulum to its initial position
+  - ESC: Quit the simulation
+
+- **Visual Feedback**: When paused, red and green lines indicate the direction and magnitude of the angular velocities for each pendulum.
+
+### Visual Elements
+
+The visualization includes:
+
+- **Pendulum Rendering**: Two rods connecting the pivot point to the first bob, and from the first bob to the second bob. The bobs are rendered as filled circles with customizable colors.
+
+- **Trail System**: The path of the second bob is traced with a fading trail showing the last 500 positions. The trail uses a circular buffer to efficiently manage memory while providing visual feedback about the pendulum's motion.
+
+- **Grid Overlay**: A background grid helps visualize the scale and motion of the system. The grid spacing corresponds to one meter in the physical simulation.
+
+### Networking
+
+The simulation includes UDP networking capabilities for sending data to other processes. This feature uses SHA-256 hashing for data integrity. A separate receiver program is provided in the `sender/` directory.
+
+## Building the Project
+
+The project uses CMake for build configuration. To build:
 
 ```bash
 mkdir -p build
@@ -92,54 +111,65 @@ cmake ..
 make
 ```
 
-You'll get `build/src/main` for the simulation and `build/tests/run_tests` for tests.
+This creates the main simulation executable in `build/src/main` and the test executable in `build/tests/run_tests`.
 
-**What you need**:
+### Dependencies
+
 - CMake
-- SDL2
-- C compiler
-- pthread (usually comes with the compiler)
+- SDL2 development libraries
+- C compiler with C11 standard support
+- pthread library (typically included with the compiler)
 
-On Mac:
+On macOS, SDL2 can be installed via Homebrew:
 ```bash
 brew install sdl2
 ```
 
-On Linux:
+On Linux, install the SDL2 development package:
 ```bash
-sudo apt-get install libsdl2-dev
+sudo apt-get install libsdl2-dev  # Debian/Ubuntu
 ```
 
-## Running
+## Running the Simulation
+
+After building, run the simulation with:
 
 ```bash
 ./build/src/main
 ```
 
-Starts with both pendulums at 90 degrees. Drag it around or use the keyboard controls.
+The simulation window opens with a double pendulum initialized at 90 degrees for both angles. You can immediately start interacting with it using the mouse or keyboard controls.
 
-## Tests
+## Testing
 
-We have Unity tests that check:
-- The integration doesn't produce NaN or garbage values
-- Energy stays roughly constant (conservative system)
+The project includes an automated test suite using the Unity testing framework. The tests validate the physics engine by checking:
 
-Run them:
+- **Integration Stability**: Verifies that the RK4 solver produces valid floating-point numbers and correctly updates the system state
+- **Energy Conservation**: Validates that the total energy (kinetic plus potential) remains constant within acceptable tolerances, confirming the simulation maintains physical accuracy
+
+To run the tests:
+
 ```bash
 cd build
 ./tests/run_tests
 ```
 
-The energy test runs the simulation for a while and makes sure total energy doesn't drift too much.
+The test suite simulates the pendulum for extended periods and verifies that energy conservation holds, which is a critical property of conservative systems like the double pendulum.
 
-## Implementation Notes
+## Implementation Details
 
-Angles are measured from vertical (0 = straight down). Screen coordinates use a pixels-per-meter scale to convert from physics space to display.
+### Coordinate System
 
-The Pendulum struct holds everything: physical parameters, current state, color, and the trail buffer.
+The simulation uses a coordinate system where angles are measured from the vertical, with zero representing the downward position. Screen coordinates are calculated from physical coordinates using a scaling factor (pixels per meter) to map the simulation space to the display.
 
-There's a thread-safe update function using pthread mutexes, though we're not really using multiple threads right now.
+### State Management
 
-## Known Issues
+The pendulum state is stored in a structure that includes all physical parameters (masses, lengths, gravity) and dynamic state variables (angles and angular velocities). The structure also maintains visual properties like color and the trail history for rendering.
 
-No friction or air resistance - it's a perfect conservative system. Time step is fixed at 0.01s. Could add adaptive stepping later if needed.
+### Thread Safety
+
+The code includes thread-safe versions of the update functions using pthread mutexes, allowing the simulation to be safely updated from multiple threads if needed.
+
+## Known Limitations
+
+The current implementation assumes no friction or air resistance, making it a purely conservative system. The simulation uses a fixed time step, which could be extended to adaptive time stepping for better accuracy in extreme conditions.
